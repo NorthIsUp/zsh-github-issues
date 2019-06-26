@@ -1,7 +1,7 @@
 # zsh-github-issues
 
-Subscribe to your projects on Github and receive **within shell** (under prompt)
-notifications about new issues.
+Subscribe to your projects of interest on Github and receive **within shell** (under
+prompt) notifications about new issues.
 
 # Usage
 
