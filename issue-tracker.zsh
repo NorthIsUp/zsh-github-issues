@@ -3,6 +3,9 @@
 emulate -R zsh
 setopt extendedglob typesetsilent warncreateglobal
 
+: ${GIT_SLEEP_TIME:=120}
+: ${GIT_PROJECTS:=zdharma/zsh-github-issues}
+
 typeset -ga reply
 
 typeset -g URL="https://api.github.com/repos/\$ORG/\$PRJ/issues?state=open"
@@ -19,33 +22,40 @@ download() {
     reply=( "${(@f)"$(curl --silent -i $url)"}" )
 }
 
-download zdharma zplugin
+while (( 1 )) {
+    for ORG PRJ in "${(@s:/:)${(s;:;)GIT_PROJECTS[@]}[@]}"; do
+        print "Processing $ORG/$PRJ"
+        download "$ORG" "$PRJ"
 
-local -a ids titles
-ids=( "${(M)reply[@]:#    \"id\":[[:space:]]#*,}" )
-ids=( "${${(M)ids[@]//(#b)[[:space:]]#\"id\":[[:space:]]#(*),/${match[1]}}[@]}" )
-titles=( ${(M)reply[@]:#[[:space:]]#\"title\":[[:space:]]#*,} )
-titles=( "${${(M)titles[@]//(#b)[[:space:]]#\"title\":[[:space:]]#\"(*)\",/${match[1]}}[@]}" )
+        local -a ids titles
+        ids=( "${(M)reply[@]:#    \"id\":[[:space:]]#*,}" )
+        ids=( "${${(M)ids[@]//(#b)[[:space:]]#\"id\":[[:space:]]#(*),/${match[1]}}[@]}" )
+        titles=( ${(M)reply[@]:#[[:space:]]#\"title\":[[:space:]]#*,} )
+        titles=( "${${(M)titles[@]//(#b)[[:space:]]#\"title\":[[:space:]]#\"(*)\",/${match[1]}}[@]}" )
 
-local -A map
-integer idx=0
-: ${ids[@]//(#b)(*)/${map[${match[1]}]::=${titles[$((++idx))]}}}
+        local -A map
+        integer idx=0
+        : ${ids[@]//(#b)(*)/${map[${match[1]}]::=${titles[$((++idx))]}}}
 
-local -a seen_ids diff
-seen_ids=( "${(@f)"$(<${CACHE_SEEN_IDS})"}" )
-if [[ -z "${seen_ids[*]}" ]]; then
-    # Initial run – assume that all issues have been seen
-    print -rl "${ids[@]}" >! "${CACHE_SEEN_IDS}"
-else
-    # Detect new issues
-    diff=( ${ids[@]:#(${(~j:|:)seen_ids[@]})} )
-fi
+        local -a seen_ids diff
+        seen_ids=( "${(@f)"$(<${CACHE_SEEN_IDS})"}" )
+        if [[ -z "${seen_ids[*]}" ]]; then
+            # Initial run – assume that all issues have been seen
+            print -rl "${ids[@]}" >! "${CACHE_SEEN_IDS}"
+        else
+            # Detect new issues
+            diff=( ${ids[@]:#(${(~j:|:)seen_ids[@]})} )
+        fi
 
-if [[ ${#diff} -gt 0 ]]; then
-    print -rl -- "New issue(s):" "${diff[@]}"
-    print -rl "${diff[@]}" >>! "${CACHE_SEEN_IDS}"
-    local issue_id
-    for issue_id in "${diff[@]}"; do
-        print -rl "${map[$issue_id]}" >> "${CACHE_NEW_TITLES}"
+        if [[ ${#diff} -gt 0 ]]; then
+            print -rl "${diff[@]}" >>! "${CACHE_SEEN_IDS}"
+            local issue_id
+            for issue_id in "${(Oa)diff[@]}"; do
+                print -r -- "New issue for $ORG/$PRJ: ${map[$issue_id]}"
+                print -rl "$ORG/$PRJ: ${map[$issue_id]}" >> "${CACHE_NEW_TITLES}"
+            done
+        fi
     done
-fi
+
+    LANG=C sleep $GIT_SLEEP_TIME
+}
