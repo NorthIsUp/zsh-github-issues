@@ -20,7 +20,7 @@ Background daemon load (it pulls the issues, by default every 2 minutes):
 # GIT stands for 'Github Issue Tracker', the future name of the project
 GIT_PROJECTS=zdharma/zsh-github-issues:zdharma/zplugin
 
-zplugin ice service"GIT" pick"zsh-github-issues.service.zsh" wait'1' lucid
+zplugin ice service"GIT" pick"zsh-github-issues.service.zsh" wait'1' wait'2' lucid
 zplugin light zdharma/zsh-github-issues
 ```
 
