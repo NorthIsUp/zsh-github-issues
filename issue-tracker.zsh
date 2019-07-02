@@ -3,7 +3,7 @@
 emulate -R zsh
 setopt extendedglob typesetsilent warncreateglobal
 
-: ${GIT_SLEEP_TIME:=120}
+: ${GIT_SLEEP_TIME:=300}
 : ${GIT_PROJECTS:=zdharma/zsh-github-issues}
 
 typeset -ga reply

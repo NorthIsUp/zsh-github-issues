@@ -3,7 +3,7 @@
 export GIT_PROJECTS
 
 # The pause between the pulls
-: ${GIT_SLEEP_TIME:=120}
+: ${GIT_SLEEP_TIME:=300}
 export GIT_SLEEP_TIME
 
 # vim:ft=zsh
