@@ -24,5 +24,8 @@ zplugin ice service"GIT" pick"zsh-github-issues.service.zsh" wait'2' lucid
 zplugin light zdharma/zsh-github-issues
 ```
 
+# Screenshot
+
+![screenshot](https://raw.githubusercontent.com/zdharma/zsh-github-issues/master/img/git.png)
 <!-- vim:tw=89
 -->
