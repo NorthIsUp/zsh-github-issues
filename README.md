@@ -7,6 +7,8 @@ prompt) notifications about new issues.
 
 The tool currently needs Zsh and [zplugin](https://github.com/zdharma/zplugin).
 
+## Manual ice-specifying
+
 The notificator load:
 ```zsh
 zplugin ice lucid id-as'GitHub-notify' \
@@ -24,8 +26,17 @@ zplugin ice service"GIT" pick"zsh-github-issues.service.zsh" wait'2' lucid
 zplugin light zdharma/zsh-github-issues
 ```
 
+## Pulling ices from the NPM packages
+
+Recent Zplugin supports NPM packages which hold the needed ices. To install the plugin
+from them, issue:
+
+```zsh
+zplugin pack for @github-issues
+zplugin pack for @github-issues-srv
+```
+
 # Screenshot
 
 ![screenshot](https://raw.githubusercontent.com/zdharma/zsh-github-issues/master/img/git.png)
-<!-- vim:tw=89
--->
+<!-- vim:set tw=89: -->
