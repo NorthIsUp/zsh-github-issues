@@ -10,4 +10,4 @@ typeset -g CACHE_NEW_TITLES="$CACHE_DIR/new_titles.log"
 # Export the message
 local nl=$'\n'
 # $(<...) always strips trailing newlines so this ##*$nl always works
-typeset -g NOTIFY_MESSAGE="${$(<$CACHE_NEW_TITLES)##*$nl}"
+{ typeset -g NOTIFY_MESSAGE="${$(<$CACHE_NEW_TITLES)##*$nl}" } 2>/dev/null
