@@ -1,7 +1,7 @@
 # zsh-github-issues
 
 Subscribe to your projects of interest on Github and receive **within shell** (under
-prompt) notifications about new issues.
+prompt) notifications about new issues and pull requests.
 
 # Usage
 
@@ -26,10 +26,10 @@ zplugin ice service"GIT" pick"zsh-github-issues.service.zsh" wait'2' lucid
 zplugin light zdharma/zsh-github-issues
 ```
 
-## Pulling ices from the NPM packages
+## Pulling ices from the Zplugin packages
 
-Recent Zplugin supports NPM packages which hold the needed ices. To install the plugin
-from them, issue:
+Recent Zplugin supports packages which hold the needed ices. To install the plugin from
+them, issue:
 
 ```zsh
 zplugin pack for @github-issues
