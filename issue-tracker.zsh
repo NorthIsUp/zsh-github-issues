@@ -5,10 +5,11 @@ setopt extendedglob typesetsilent warncreateglobal
 
 : ${GIT_SLEEP_TIME:=300}
 : ${GIT_PROJECTS:=zdharma/zsh-github-issues}
+: ${GIT_ISSUES_AUTH_TOKEN:=}
 
 typeset -ga reply
 
-typeset -g URL="https://api.github.com/repos/\$ORG/\$PRJ/issues?state=open"
+typeset -g URL="https://\${GIT_ISSUES_AUTH}api.github.com/repos/\$ORG/\$PRJ/issues?state=open"
 typeset -g CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/zsh-github-issues"
 typeset -g CACHE_SEEN_IDS="$CACHE_DIR/ids_seen.dat"
 typeset -g CACHE_NEW_TITLES="$CACHE_DIR/new_titles.log"
@@ -17,7 +18,9 @@ command mkdir -p "$CACHE_DIR"
 command touch "$CACHE_SEEN_IDS"
 
 download() {
-    local url ORG="$1" PRJ="$2"
+    local url ORG="$1" PRJ="$2" GIT_ISSUES_AUTH=""
+    [[ "$GIT_ISSUES_AUTH_TOKEN" ]] && GIT_ISSUES_AUTH="api:$GIT_ISSUES_AUTH_TOKEN@"
+
     eval "url=$URL"
     reply=( "${(@f)"$(curl --silent -i $url)"}" )
 }
